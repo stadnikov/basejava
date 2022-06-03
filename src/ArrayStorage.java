@@ -3,49 +3,41 @@
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    int size = 0;
 
     void clear() {
-        int counter = 0;
-        while (storage[counter] != null) {
-            storage[counter] = null;
-            counter++;
+        for (int i = 0; i < size; i++) {
+            storage[i] = null;
         }
+        size = 0;
     }
 
     void save(Resume r) {
-        int counter = 0;
-        while (storage[counter] != null) {
-            counter++;
-        }
-        storage[counter] = r;
+        storage[size] = r;
+        size++;
     }
 
     Resume get(String uuid) {
-        int counter = 0;
-        while (storage[counter] != null) {
-            if (storage[counter].uuid.equals(uuid)) {
-                return storage[counter];
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                return storage[i];
             }
-            counter++;
         }
         return null;
     }
 
     void delete(String uuid) {
-        int counter = 0;
-
         int itemToRemove = 0;
-
-        while (storage[counter] != null) {
-            if (storage[counter].uuid.equals(uuid)) {
-                itemToRemove = counter;
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                itemToRemove = i;
             }
-            counter++;
         }
 
-        if (counter > 0) {
-            storage[itemToRemove] = storage[counter - 1];
-            storage[counter - 1] = null;
+        if (size > 0) {
+            size--;
+            storage[itemToRemove] = storage[size];
+            storage[size] = null;
         }
     }
 
@@ -53,20 +45,12 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        int counter = 0;
-        while (storage[counter] != null) {
-            counter++;
-        }
-        Resume[] tempResumeArray = new Resume[counter];
-        System.arraycopy(storage, 0, tempResumeArray, 0, counter);
-        return tempResumeArray;
+        Resume[] allResume = new Resume[size];
+        System.arraycopy(storage, 0, allResume, 0, size);
+        return allResume;
     }
 
     int size() {
-        int counter = 0;
-        while (storage[counter] != null) {
-            counter++;
-        }
-        return counter;
+        return size;
     }
 }
