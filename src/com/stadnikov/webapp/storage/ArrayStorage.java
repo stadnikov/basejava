@@ -20,53 +20,45 @@ public class ArrayStorage {
     }
 
     public void update(Resume r) {
-        if (get(r.getUuid()) != null) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(r.getUuid())) {
-                    storage[i] = r;
-                }
-            }
+        int index = getIndex(r.getUuid());
+        if (index == -1) {
+            System.out.println("Unable to update: There is no item with uuid = " + r.getUuid());
         } else {
-            System.out.println("Unable to update: There is no uuid = " + r.getUuid());
+            storage[index] = r;
         }
     }
 
     public void save(Resume r) {
-        if (size() < 10000) {
-            if (get(r.getUuid()) == null) {
+        if (getIndex(r.getUuid()) != -1) {
+            System.out.println("Unable to save: There is already item with uuid = " + r.getUuid());
+        } else {
+            if (size() == storage.length) {
+                System.out.println("Unable to save: Overflow of Storage, uuid = " + r.getUuid());
+            } else {
                 storage[size] = r;
                 size++;
-            } else {
-                System.out.println("Unable to save: There is already item with uuid = " + r.getUuid());
             }
-        } else {
-            System.out.println("Unable to save: Overflow of Storage, uuid = " + r.getUuid());
         }
     }
 
     public Resume get(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return storage[i];
-            }
+        int index = getIndex(uuid);
+        if (index == -1) {
+            System.out.println("Unable to get: There is no uuid = " + uuid);
+            return null;
         }
-        System.out.println("Unable to get: There is no uuid = " + uuid);
-        return null;
+        return storage[index];
     }
 
     public void delete(String uuid) {
-        if (get(uuid) != null) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(uuid)) {
-                    size--;
-                    storage[i] = storage[size];
-                    storage[size] = null;
-                }
-            }
-        } else {
+        int index = getIndex(uuid);
+        if (index == -1) {
             System.out.println("Unable to delete: There is no uuid = " + uuid);
+        } else {
+            size--;
+            storage[index] = storage[size];
+            storage[size] = null;
         }
-
     }
 
     /**
@@ -78,5 +70,14 @@ public class ArrayStorage {
 
     public int size() {
         return size;
+    }
+
+    private int getIndex(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                return size;
+            }
+        }
+        return -1;
     }
 }
