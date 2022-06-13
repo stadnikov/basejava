@@ -7,15 +7,16 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
+public class ArrayStorage implements Storage {
+    private static final int STORAGE_LIMIT = 10000;
+    Resume[] storage = new Resume[STORAGE_LIMIT];
     int size = 0;
 
     public void clear() {
 //        for (int i = 0; i < size; i++) {
         //          storage[i] = null;
         //    }
-        Arrays.fill(storage, 0, size() - 1, null);
+        Arrays.fill(storage, 0, size(), null);
         size = 0;
     }
 
@@ -32,7 +33,7 @@ public class ArrayStorage {
         if (getIndex(r.getUuid()) != -1) {
             System.out.println("Unable to save: There is already item with uuid = " + r.getUuid());
         } else {
-            if (size() == storage.length) {
+            if (size() == STORAGE_LIMIT) {
                 System.out.println("Unable to save: Overflow of Storage, uuid = " + r.getUuid());
             } else {
                 storage[size] = r;
